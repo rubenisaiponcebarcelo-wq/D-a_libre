@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>¡Te ganaste un día libre!</title>
+
+  <style>
+    :root {
+      font-family: Arial, Helvetica, sans-serif;
+      color: #183c36;
+      background: #e9f4ef;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100svh;
+      display: grid;
+      place-items: center;
+      padding: 28px 20px;
+      background:
+        radial-gradient(ellipse at 10% 10%, #c8ebdc, transparent 50%),
+        radial-gradient(ellipse at 100% 100%, #d2e5fc, transparent 50%),
+        #e9f4ef;
+    }
+
+    main {
+      width: min(100%, 640px);
+      text-align: center;
+    }
+
+    .ticket {
+      position: relative;
+      overflow: hidden;
+      background: #fffdf9;
+      border-radius: 28px;
+      padding: 30px;
+      box-shadow: 0 20px 80px #1c524215;
+    }
+
+    .illustration {
+      width: 100px;
+      height: 100px;
+      margin: 0 auto 20px;
+      border-radius: 50%;
+      background: #f2eaa6;
+      display: grid;
+      place-items: center;
+      transform: rotate(-7deg);
+    }
+
+    .illustration svg {
+      width: 76px;
+      height: 76px;
+    }
+
+    h1 {
+      font-size: clamp(34px, 7vw, 48px);
+      line-height: 1.04;
+      letter-spacing: -2px;
+      margin: 0 auto 20px;
+      max-width: 480px;
+    }
+
+    h1 span {
+      color: #27846a;
+    }
+
+    .description {
+      font-size: 18px;
+      line-height: 1.55;
+      color: #64736b;
+      max-width: 380px;
+      margin: auto;
+    }
+
+    .divider {
+      position: relative;
+      border-top: 2px dashed #dde5dc;
+      margin: 22px -30px 18px;
+    }
+
+    .divider::before,
+    .divider::after {
+      content: "";
+      position: absolute;
+      top: -13px;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: #e9f4ef;
+    }
+
+    .divider::before {
+      left: -12px;
+    }
+
+    .divider::after {
+      right: -12px;
+    }
+
+    .actions {
+      position: relative;
+      height: 330px;
+      border: 1px solid #d5e3d8;
+      border-radius: 20px;
+      background: #f4f8f3;
+      overflow: hidden;
+      isolation: isolate;
+      margin-bottom: 18px;
+    }
+
+    button {
+      font: inherit;
+      font-weight: 700;
+      border: 0;
+      cursor: pointer;
+      touch-action: manipulation;
+      line-height: 1.2;
+    }
+
+    button:focus-visible {
+      outline: 3px solid #e6ad26;
+      outline-offset: 4px;
+    }
+
+    #yes,
+    #no {
+      position: absolute;
+      top: 110px;
+      width: calc(50% - 18px);
+      height: 104px;
+      border-radius: 24px;
+      padding: 12px;
+      background: #185c48;
+      color: white;
+      font-size: 16px;
+      box-shadow: 0 4px 0 #0d3c2e;
+    }
+
+    #yes {
+      left: 12px;
+      z-index: 2;
+    }
+
+    #no {
+      right: 12px;
+      z-index: 3;
+    }
+
+    #yes.escaping {
+      position: fixed;
+      z-index: 1000;
+      margin: 0;
+      transition: none;
+    }
+
+    .success {
+      display: none;
+    }
+
+    .success .illustration {
+      background: #d9edc8;
+      transform: rotate(5deg);
+    }
+
+    #again {
+      display: block;
+      margin: 24px auto 0;
+      padding: 16px 24px;
+      border-radius: 100px;
+      background: #edf0eb;
+      color: #345d4c;
+      font-size: 16px;
+    }
+
+    @media (max-width: 420px) {
+      .ticket {
+        padding: 30px 20px 22px;
+      }
+
+      .divider {
+        margin-left: -20px;
+        margin-right: -20px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main>
+    <section class="ticket" aria-label="Invitación a descansar">
+      <div id="invitation">
+        <div class="illustration" aria-hidden="true">
+          <svg viewBox="0 0 120 120" fill="none">
+            <circle cx="89" cy="27" r="15" fill="#EDAA42"/>
+            <path
+              d="M28 25v70m63-44L28 25 10 73"
+              stroke="#214E41"
+              stroke-width="5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M19 61l33 12 26-25"
+              stroke="#EC825A"
+              stroke-width="11"
+              stroke-linecap="round"
+            />
+            <path
+              d="M54 76l-8 22m29-48 15 47M16 100h85"
+              stroke="#214E41"
+              stroke-width="5"
+              stroke-linecap="round"
+            />
+            <path
+              d="M70 20l-6-8m38 34 9 4"
+              stroke="#EDAA42"
+              stroke-width="4"
+              stroke-linecap="round"
+            />
+          </svg>
+        </div>
+
+        <h1>¡Te ganaste<br>un <span>día libre!</span></h1>
+        <p class="description">Choose wisely 👀</p>
+
+        <div class="divider"></div>
+
+        <div class="actions" id="arena">
+          <button id="yes" type="button">
+            Acepto mi día libre 🏖️
+          </button>
+
+          <button id="no" type="button">
+            No, prefiero quedarme a trabajar horas extras 💼🕒
+          </button>
+        </div>
+      </div>
+
+      <div id="success" class="success" role="status" tabindex="-1">
+        <div class="illustration" aria-hidden="true">
+          <svg viewBox="0 0 120 120" fill="none">
+            <path
+              d="M28 62l23 24 43-49"
+              stroke="#27846A"
+              stroke-width="12"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </div>
+
+        <h1>Horas extras<br><span>aceptadas. 💼</span></h1>
+
+        <p class="description">
+          ¡Qué gusto trabajar con gente que se pone la camiseta! 👕
+        </p>
+
+        <button id="again" type="button">Intentar otra vez</button>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const runner = document.getElementById("yes");
+    const extras = document.getElementById("no");
+    const arena = document.getElementById("arena");
+    const invitation = document.getElementById("invitation");
+    const success = document.getElementById("success");
+    const again = document.getElementById("again");
+
+    let attempts = 0;
+    let active = true;
+    let lastPointerAttempt = 0;
+
+    function escapeAcrossScreen(clientX, clientY) {
+      if (!active) return;
+
+      const previous = runner.getBoundingClientRect();
+      const viewportWidth = document.documentElement.clientWidth;
+      const viewportHeight = window.innerHeight;
+      const pad = 12;
+
+      const width = Math.min(
+        previous.width,
+        viewportWidth - pad * 2
+      );
+
+      const height = Math.min(
+        previous.height,
+        viewportHeight - pad * 2
+      );
+
+      if (!runner.classList.contains("escaping")) {
+        document.body.appendChild(runner);
+        runner.classList.add("escaping");
+      }
+
+      runner.style.width = width + "px";
+      runner.style.height = height + "px";
+
+      const maxX = Math.max(pad, viewportWidth - width - pad);
+      const maxY = Math.max(pad, viewportHeight - height - pad);
+
+      const pointerX = Number.isFinite(clientX)
+        ? clientX
+        : previous.left + previous.width / 2;
+
+      const pointerY = Number.isFinite(clientY)
+        ? clientY
+        : previous.top + previous.height / 2;
+
+      const extrasBox = extras.getBoundingClientRect();
+
+      let best = {
+        x: pad,
+        y: pad,
+        score: -Infinity
+      };
+
+      for (let i = 0; i < 48; i++) {
+        const x = i < 4
+          ? (i % 2 ? maxX : pad)
+          : pad + Math.random() * (maxX - pad);
+
+        const y = i < 4
+          ? (i < 2 ? pad : maxY)
+          : pad + Math.random() * (maxY - pad);
+
+        const distance = Math.hypot(
+          x + width / 2 - pointerX,
+          y + height / 2 - pointerY
+        );
+
+        const movement = Math.hypot(
+          x - previous.left,
+          y - previous.top
+        );
+
+        const overlapsExtras =
+          x < extrasBox.right &&
+          x + width > extrasBox.left &&
+          y < extrasBox.bottom &&
+          y + height > extrasBox.top;
+
+        const score =
+          distance +
+          Math.min(movement, 200) * 0.4 -
+          (overlapsExtras ? 2000 : 0);
+
+        if (score > best.score) {
+          best = { x, y, score };
+        }
+      }
+
+      runner.style.left = best.x + "px";
+      runner.style.top = best.y + "px";
+    }
+
+    function sizeExtras() {
+      if (attempts === 0) {
+        extras.removeAttribute("style");
+        return;
+      }
+
+      const factor = Math.pow(1.65, attempts);
+      const viewportWidth = document.documentElement.clientWidth;
+      const viewportHeight = window.innerHeight;
+      const baseWidth = arena.clientWidth / 2 - 18;
+
+      const width = Math.min(
+        baseWidth * factor,
+        viewportWidth
+      );
+
+      const height = Math.min(
+        104 * factor,
+        viewportHeight
+      );
+
+      if (extras.parentElement !== document.body) {
+        document.body.appendChild(extras);
+      }
+
+      Object.assign(extras.style, {
+        position: "fixed",
+        zIndex: "2000",
+        width: width + "px",
+        height: height + "px",
+        top: (viewportHeight - height) / 2 + "px",
+        left: (viewportWidth - width) / 2 + "px",
+        right: "auto",
+        bottom: "auto",
+        transform: "none",
+        maxWidth: "none",
+        maxHeight: "none",
+        margin: "0",
+        borderRadius:
+          width === viewportWidth && height === viewportHeight
+            ? "0"
+            : "24px",
+        fontSize: Math.min(16 * Math.sqrt(factor), 48) + "px",
+        padding: "24px",
+        boxShadow: "0 6px 30px #0d3c2e33"
+      });
+    }
+
+    function growExtras() {
+      attempts++;
+      sizeExtras();
+    }
+
+    document.addEventListener("pointerdown", (event) => {
+      if (!active || extras.contains(event.target)) return;
+
+      event.preventDefault();
+      lastPointerAttempt = Date.now();
+
+      growExtras();
+      escapeAcrossScreen(event.clientX, event.clientY);
+    }, true);
+
+    document.addEventListener("pointermove", (event) => {
+      if (!active) return;
+
+      if (
+        event.pointerType !== "mouse" &&
+        event.pointerType !== "pen"
+      ) {
+        return;
+      }
+
+      const button = runner.getBoundingClientRect();
+
+      if (
+        event.clientX > button.left - 35 &&
+        event.clientX < button.right + 35 &&
+        event.clientY > button.top - 30 &&
+        event.clientY < button.bottom + 30
+      ) {
+        escapeAcrossScreen(event.clientX, event.clientY);
+      }
+    });
+
+    runner.addEventListener("pointerenter", (event) => {
+      if (
+        event.pointerType === "mouse" ||
+        event.pointerType === "pen"
+      ) {
+        escapeAcrossScreen(event.clientX, event.clientY);
+      }
+    });
+
+    runner.addEventListener("click", (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+
+      if (!active) return;
+
+      if (
+        event.detail === 0 ||
+        Date.now() - lastPointerAttempt > 400
+      ) {
+        growExtras();
+      }
+
+      escapeAcrossScreen(event.clientX, event.clientY);
+    });
+
+    extras.addEventListener("click", () => {
+      active = false;
+
+      runner.style.display = "none";
+      extras.style.display = "none";
+      invitation.style.display = "none";
+      success.style.display = "block";
+
+      success.focus();
+    });
+
+    again.addEventListener("click", () => {
+      success.style.display = "none";
+      invitation.style.display = "block";
+
+      attempts = 0;
+      lastPointerAttempt = 0;
+
+      runner.classList.remove("escaping");
+      runner.removeAttribute("style");
+      extras.removeAttribute("style");
+
+      arena.appendChild(extras);
+      arena.insertBefore(runner, extras);
+
+      active = true;
+      extras.focus();
+    });
+
+    window.addEventListener("resize", () => {
+      if (!active) return;
+
+      sizeExtras();
+
+      if (runner.classList.contains("escaping")) {
+        escapeAcrossScreen();
+      }
+    });
+  </script>
+</body>
+</html>
